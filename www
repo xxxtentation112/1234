@@ -1,0 +1,143 @@
+import java.util.ArrayList;
+import java.util.List;
+
+abstract class CariKerja {
+    public abstract List<Job> cariPekerjaan(String keyword, String lokasi);
+}
+
+class User {
+    private int NIK;
+    private String username;
+    private String password;
+    private String email;
+    private List<Job> appliedJobs = new ArrayList<>();
+
+    public User(int NIK, String username, String password, String email) {
+        this.NIK = NIK;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
+    public void applyJob(Job job) {
+        appliedJobs.add(job);
+    }
+}
+
+class Job {
+    private int jobID;
+    private String jobTitle;
+    private Company company;
+    private String description;
+    private int salary;
+    private List<String> requirements;
+
+    public Job(int jobID, String jobTitle, Company company, String description, int salary, List<String> requirements) {
+        this.jobID = jobID;
+        this.jobTitle = jobTitle;
+        this.company = company;
+        this.description = description;
+        this.salary = salary;
+        this.requirements = requirements;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public String getJobDetails() {
+        return "Job Title: " + jobTitle + "\nCompany: " + company.getCompanyName();
+    }
+}
+
+class Company {
+    private int companyID;
+    private String companyName;
+    private List<Job> jobList = new ArrayList<>();
+    private String location;
+
+    public Company(int companyID, String companyName, String location) {
+        this.companyID = companyID;
+        this.companyName = companyName;
+        this.location = location;
+    }
+
+    public void addJob(Job job) {
+        jobList.add(job);
+    }
+
+    public List<Job> getJobList() {
+        return jobList;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+}
+
+class Resume {
+    private String jobStatus;
+    private String jobID;
+
+    public String getNIK() {
+        return "Job ID: " + jobID;
+    }
+
+    public String getInfo() {
+        return "Job Status: " + jobStatus + "\nJob ID: " + jobID;
+    }
+}
+
+class HRD {
+    private int NIK;
+    private int companyID;
+
+    public String getNIK() {
+        return "NIK: " + NIK;
+    }
+
+    public String getInfo() {
+        return "Company ID: " + companyID;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Membuat beberapa objek
+        Company company = new Company(1, "ABC Corp", "New York");
+        User user = new User(12345, "john_doe", "password123", "john.doe@email.com");
+        HRD hrd = new HRD(67890, company.getCompanyID());
+
+        // Membuat beberapa pekerjaan
+        List<String> requirements = new ArrayList<>();
+        requirements.add("Java programming");
+        Job job1 = new Job(1, "Software Developer", company, "Java developer position", 60000, requirements);
+        Job job2 = new Job(2, "Data Analyst", company, "Data analyst position", 55000, requirements);
+
+        // Menambahkan pekerjaan ke perusahaan
+        company.addJob(job1);
+        company.addJob(job2);
+
+        // Pelamar melamar pekerjaan
+        user.applyJob(job1);
+
+        // HRD melihat info pelamar
+        System.out.println("HRD Info:");
+        System.out.println("HRD NIK: " + hrd.getNIK());
+        System.out.println("HRD Company ID: " + hrd.getInfo());
+
+        // Menampilkan daftar pekerjaan perusahaan
+        System.out.println("\nJob Listings for " + company.getCompanyName() + ":");
+        List<Job> jobList = company.getJobList();
+        for (Job job : jobList) {
+            System.out.println(job.getJobDetails());
+        }
+
+        // Menampilkan pekerjaan yang dilamar oleh pelamar
+        System.out.println("\nJobs Applied by User " + user.getUsername() + ":");
+        List<Job> appliedJobs = user.getAppliedJobs();
+        for (Job job : appliedJobs) {
+            System.out.println(job.getJobTitle());
+        }
+    }
+}
